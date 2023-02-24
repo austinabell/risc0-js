@@ -1,4 +1,4 @@
-use risc0_zkvm::{sha::Digest, Prover, Receipt as Risc0Receipt};
+use risc0_zkvm::{sha::Digest, Receipt as Risc0Receipt};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -11,10 +11,7 @@ pub struct Receipt {
 impl Receipt {
     #[wasm_bindgen(constructor)]
     pub fn new(journal: Box<[u8]>, seal: Box<[u32]>) -> Self {
-        Self {
-            journal: journal.into(),
-            seal: seal.into(),
-        }
+        Self { journal, seal }
     }
     #[wasm_bindgen(getter)]
     pub fn journal(&self) -> Box<[u8]> {
@@ -24,16 +21,14 @@ impl Receipt {
     pub fn seal(&self) -> Box<[u32]> {
         self.seal.clone()
     }
-}
-
-#[wasm_bindgen]
-pub fn validate_proof(receipt: Receipt, image_id: &[u8]) -> Result<(), JsError> {
-    let receipt = Risc0Receipt::new(&receipt.journal, &receipt.seal);
-    let image_id: [u8; 32] = image_id.try_into()?;
-    let digest = Digest::from(image_id);
-    Ok(receipt
-        .verify(&digest)
-        .map_err(|e| JsError::new(&format!("Failed to validate proof: {}", e)))?)
+    pub fn validate(&self, image_id: &[u8]) -> Result<(), JsError> {
+        let receipt = Risc0Receipt::new(&self.journal, &self.seal);
+        let image_id: [u8; 32] = image_id.try_into()?;
+        let digest = Digest::from(image_id);
+        receipt
+            .verify(&digest)
+            .map_err(|e| JsError::new(&format!("Failed to validate proof: {e}")))
+    }
 }
 
 // TODO this is currently blocked by getrandom crate not working in wasm. Investigate r0 lib

@@ -13,6 +13,17 @@ cd example
 npm start
 ```
 
+## Usage
+
+```ts
+try {
+	new Receipt(journal, sealBytes).validate(id);
+} catch (e) {
+	// ...
+}
+
+```
+
 ## Converting receipt and ID to base64
 
 TODO this opinionated and might change, but the base64 was generated with the following code on a r0 program to use with the frontend:

@@ -14,7 +14,7 @@ function App() {
     const id = Buffer.from(idBase64, "base64");
     import("risc0-js").then((module) => {
       try {
-        module.validate_proof(new module.Receipt(journal, sealBytes), id);
+        new module.Receipt(journal, sealBytes).validate(id);
         setText("Proof is valid");
 
         // const codeBytes = Buffer.from(code, "base64");

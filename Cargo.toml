@@ -8,4 +8,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 wasm-bindgen = "0.2"
-risc0-zkvm = { version = "0.13", default-features = false, features = ["std"] }
+risc0-zkvm = { version = "0.14", default-features = false, features = ["std"] }

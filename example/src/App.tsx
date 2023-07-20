@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import { seal, code } from "./inputs";
+import {Buffer} from 'buffer';
+import init, { SessionReceipt } from "risc0-js";
 
 const journalBase64 = "AAAAAINJFKY";
 const idBase64 = "84keoVl3RAHWa4hlfV/q0f3opURNbbSp/7jU7qJ5Ft8";
@@ -12,9 +14,10 @@ function App() {
     const journal = Buffer.from(journalBase64, "base64");
     const sealBytes = new Uint32Array(Buffer.from(seal, "base64").buffer);
     const id = Buffer.from(idBase64, "base64");
-    import("risc0-js").then((module) => {
+    init().then(() => {
       try {
-        new module.Receipt(journal, sealBytes).validate(id);
+        // TODO: no longer constructor and need to deserialize from bytes (invalid input)
+        SessionReceipt.bincode_deserialize(journal).validate(id);
         setText("Proof is valid");
 
         // const codeBytes = Buffer.from(code, "base64");

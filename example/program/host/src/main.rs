@@ -4,9 +4,8 @@
 use methods::{METHOD_NAME_ELF, METHOD_NAME_ID};
 use risc0_zkvm::{
     default_executor_from_elf,
-    receipt::SegmentReceipt,
     serde::{from_slice, to_vec},
-    ExecutorEnv, SessionReceipt,
+    ExecutorEnv,
 };
 use std::fs::File;
 use std::io::Write;

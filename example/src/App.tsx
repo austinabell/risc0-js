@@ -1,32 +1,37 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { seal, code } from "./inputs";
-import {Buffer} from 'buffer';
 import init, { SessionReceipt } from "risc0-js";
-
-const journalBase64 = "AAAAAINJFKY";
-const idBase64 = "84keoVl3RAHWa4hlfV/q0f3opURNbbSp/7jU7qJ5Ft8";
 
 function App() {
   const [text, setText] = useState("Validating proof...");
 
+  async function fetchBinaryFiles(): Promise<Uint8Array[]> {
+    const urls = [
+      process.env.PUBLIC_URL + "/receipt.bin",
+      process.env.PUBLIC_URL + "/method_id.bin",
+    ];
+
+    return Promise.all(
+      urls.map((url) =>
+        fetch(url).then((response) => {
+          if (!response.ok) {
+            throw new Error("HTTP error " + response.status);
+          }
+          return response.arrayBuffer();
+        })
+      )
+    ).then((buffers) => {
+      return buffers.map((buffer) => new Uint8Array(buffer));
+    });
+  }
+
   useEffect(() => {
-    const journal = Buffer.from(journalBase64, "base64");
-    const sealBytes = new Uint32Array(Buffer.from(seal, "base64").buffer);
-    const id = Buffer.from(idBase64, "base64");
     init().then(() => {
       try {
-        // TODO: no longer constructor and need to deserialize from bytes (invalid input)
-        SessionReceipt.bincode_deserialize(journal).validate(id);
-        setText("Proof is valid");
-
-        // const codeBytes = Buffer.from(code, "base64");
-        // const input = new Uint32Array(
-        //   Buffer.from("AACt3gAAAAAAAO++AAAAAA", "base64")
-        // );
-        // const genRec = module.generate_proof(codeBytes, id, input);
-        // module.validate_proof(genRec, id);
-        // setText("Proof is valid");
+        fetchBinaryFiles().then(([receipt, method_id]) => {
+          SessionReceipt.bincode_deserialize(receipt).validate(method_id);
+          setText("Proof is valid");
+        });
       } catch (e) {
         setText("Error: " + e);
         console.error(e);

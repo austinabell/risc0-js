@@ -4,8 +4,9 @@
 use methods::{METHOD_NAME_ELF, METHOD_NAME_ID};
 use risc0_zkvm::{
     default_executor_from_elf,
+    receipt::SegmentReceipt,
     serde::{from_slice, to_vec},
-    ExecutorEnv,
+    ExecutorEnv, SessionReceipt,
 };
 use std::fs::File;
 use std::io::Write;
@@ -49,8 +50,8 @@ fn main() -> anyhow::Result<()> {
     let mut file = File::create("../../public/receipt.bin")?;
     file.write_all(&receipt_serialized)?;
 
-    let method_name = bincode::serialize(&receipt)?;
     let mut file = File::create("../../public/method_id.bin")?;
-    file.write_all(&method_name)?;
+    file.write_all(&bytemuck::cast::<[u32; 8], [u8; 32]>(METHOD_NAME_ID))?;
+
     Ok(())
 }

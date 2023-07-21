@@ -14,6 +14,7 @@ cd example
 npm install
 
 # This command will build the program and embed the proof data in the frontend public dir
+# before starting the frontend.
 npm start
 
 # Run this anytime to re-generate the proof while frontend is running

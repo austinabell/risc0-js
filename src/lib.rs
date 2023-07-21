@@ -24,3 +24,24 @@ impl SessionReceipt {
             .map_err(|e| JsError::new(&format!("Failed to validate proof: {e}")))
     }
 }
+
+#[cfg(test)]
+pub mod tests {
+    use wasm_bindgen_test::wasm_bindgen_test_configure;
+    wasm_bindgen_test_configure!(run_in_browser);
+
+    use wasm_bindgen_test::*;
+
+    use super::SessionReceipt;
+
+    #[wasm_bindgen_test]
+    fn verify_receipt() {
+        let receipt = include_bytes!("../example/public/receipt.bin");
+        let method_id = include_bytes!("../example/public/method_id.bin");
+        let receipt = SessionReceipt::bincode_deserialize(receipt)
+            .unwrap_or_else(|_| panic!("invalid deserialization"));
+        receipt
+            .validate(method_id)
+            .unwrap_or_else(|_| panic!("invalid validation"));
+    }
+}

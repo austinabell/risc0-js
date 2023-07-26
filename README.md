@@ -2,8 +2,12 @@
 
 ## Building
 
-```
+```bash
 wasm-pack build --target web
+
+# OR
+
+make build_web_js
 ```
 
 ## Running example
@@ -19,6 +23,16 @@ npm start
 
 # Run this anytime to re-generate the proof while frontend is running
 npm run build-program
+```
+
+## Testing
+
+```bash
+# Test with chrome or any other wasm-pack test target
+wasm-pack test --chrome
+
+# Run nodejs tests
+make test_js
 ```
 
 ## Usage

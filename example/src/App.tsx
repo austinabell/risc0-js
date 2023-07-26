@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import init, { SessionReceipt } from "risc0-js";
 
-function App() {
+function App(): JSX.Element {
   const [text, setText] = useState("Validating proof...");
 
   async function fetchBinaryFiles(): Promise<Uint8Array[]> {

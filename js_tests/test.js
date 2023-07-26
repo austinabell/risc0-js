@@ -10,10 +10,9 @@ async function fetchBinaryFiles() {
 	return Promise.all([receiptPromise, methodIdPromise]);
 }
 
-test('example valid proof verification', () => {
-	fetchBinaryFiles().then(([receipt, method_id]) => {
-		SessionReceipt.bincode_deserialize(receipt).validate(method_id);
-	});
+test('example valid proof verification', async () => {
+	const [receipt, method_id] = await fetchBinaryFiles();
+	SessionReceipt.bincode_deserialize(receipt).validate(method_id);
 });
 
 test('invalid proof verification should fail with invalid method id', async () => {

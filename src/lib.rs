@@ -1,8 +1,8 @@
-use risc0_zkvm::receipt;
+use risc0_zkvm::Receipt;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub struct SessionReceipt(receipt::SessionReceipt);
+pub struct SessionReceipt(Receipt);
 
 #[wasm_bindgen]
 impl SessionReceipt {

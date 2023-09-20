@@ -38,12 +38,12 @@ make test_js
 ## Usage
 
 ```ts
-import init, { SessionReceipt } from "risc0-js";
+import init, { Receipt } from "risc0-js";
 
 init().then(() => {
 	try {
 		// Deserialize encoded receipt directly
-		SessionReceipt.bincode_deserialize(receipt).validate(method_id);
+		Receipt.bincode_deserialize(receipt).validate(method_id);
 	} catch (e) {
 		// ...
 	}

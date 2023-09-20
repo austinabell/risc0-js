@@ -1,15 +1,14 @@
-use risc0_zkvm::Receipt;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub struct SessionReceipt(Receipt);
+pub struct Receipt(risc0_zkvm::Receipt);
 
 #[wasm_bindgen]
-impl SessionReceipt {
-    pub fn bincode_deserialize(buffer: &[u8]) -> Result<SessionReceipt, JsError> {
+impl Receipt {
+    pub fn bincode_deserialize(buffer: &[u8]) -> Result<Receipt, JsError> {
         let receipt = bincode::deserialize(buffer)
             .map_err(|e| JsError::new(&format!("Failed to deserialize receipt: {e}")))?;
-        Ok(SessionReceipt(receipt))
+        Ok(Receipt(receipt))
     }
 
     #[wasm_bindgen(getter)]
@@ -32,13 +31,13 @@ pub mod tests {
 
     use wasm_bindgen_test::*;
 
-    use super::SessionReceipt;
+    use super::Receipt;
 
     #[wasm_bindgen_test]
     fn verify_receipt() {
         let receipt = include_bytes!("../example/public/receipt.bin");
         let method_id = include_bytes!("../example/public/method_id.bin");
-        let receipt = SessionReceipt::bincode_deserialize(receipt)
+        let receipt = Receipt::bincode_deserialize(receipt)
             .unwrap_or_else(|_| panic!("invalid deserialization"));
         receipt
             .validate(method_id)

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import init, { SessionReceipt } from "risc0-js";
+import init, { Receipt } from "risc0-js";
 
 function App(): JSX.Element {
   const [text, setText] = useState("Validating proof...");
@@ -29,7 +29,7 @@ function App(): JSX.Element {
     init().then(() => {
       try {
         fetchBinaryFiles().then(([receipt, method_id]) => {
-          SessionReceipt.bincode_deserialize(receipt).validate(method_id);
+          Receipt.bincode_deserialize(receipt).validate(method_id);
           setText("Proof is valid");
         });
       } catch (e) {

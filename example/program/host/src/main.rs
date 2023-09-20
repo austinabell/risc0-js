@@ -1,6 +1,7 @@
 use methods::{METHOD_NAME_ELF, METHOD_NAME_ID};
 use risc0_zkvm::{
-    default_executor_from_elf,
+    //default_executor_from_elf,
+    default_prover,
     serde::{from_slice, to_vec},
     ExecutorEnv,
 };
@@ -15,15 +16,21 @@ fn main() -> anyhow::Result<()> {
         .build()
         .unwrap();
 
-    // Next, we make an executor, loading the (renamed) ELF binary.
-    let mut exec = default_executor_from_elf(env, METHOD_NAME_ELF).unwrap();
+    // // Next, we make an executor, loading the (renamed) ELF binary.
+    // let mut exec = default_executor_from_elf(env, METHOD_NAME_ELF).unwrap();
 
-    // Run the executor to produce a session.
-    let session = exec.run().unwrap();
+    // // Run the executor to produce a session.
+    // let session = exec.run().unwrap();
 
-    // Prove the session to produce a receipt.
-    let receipt = session.prove().unwrap();
+    // // Prove the session to produce a receipt.
+    // let receipt = session.prove().unwrap();
 
+    // Obtain the default prover.
+    let prover = default_prover();
+
+    // Produce a receipt by proving the specified ELF binary.
+    let receipt = prover.prove_elf(env, METHOD_NAME_ELF).unwrap();
+   
     let c: u64 = from_slice(&receipt.journal).expect(
         "Journal output should deserialize into the same types (& order) that it was written",
     );

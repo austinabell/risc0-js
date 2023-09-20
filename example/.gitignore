@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# Generated
+public/*.bin
+
 # testing
 /coverage
 
